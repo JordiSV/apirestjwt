@@ -26,9 +26,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //Openwebinars
 
 
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Configuration
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
 
@@ -57,8 +57,6 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
 //    }
 
 
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(elmeuUserDetailsService).passwordEncoder(xifrat);
@@ -83,17 +81,11 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
-//                .cors()
-//                .and()
                 .httpBasic()
                 .and()
-            //    .exceptionHandling().authenticationEntryPoint(elmeuEntryPoint)
-            //    .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-            //per poder accedir al h2-console
                 .authorizeRequests().antMatchers("/").permitAll().and()
                 .authorizeRequests().antMatchers("/h2-console/**").permitAll()
                 .and()
@@ -101,18 +93,12 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
 
-
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/login").permitAll()
-               // .antMatchers(HttpMethod.GET,"/login").permitAll()
-                    //.antMatchers(HttpMethod.GET, "/me/**").hasRole("ADMIN") //per fer proves del forbidden
-                    .antMatchers(HttpMethod.GET, "/login/**","/usuaris/**", "/videojocs/**").hasRole("USER")
-//                    .antMatchers(HttpMethod.POST, "/usuaris/**", "/videojocs/**").hasRole("USER")
-//                    .antMatchers(HttpMethod.PUT, "/videojocs/**").hasRole("USER")
-//                    .antMatchers(HttpMethod.DELETE, "/videojocs/**").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.POST, "/videojocs/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/login/**", "/usuaris/**", "/food/**").hasRole("USER")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
 //    @Bean
